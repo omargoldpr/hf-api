@@ -1,4 +1,3 @@
-from msilib.schema import Class
 import typing
 import strawberry
 
@@ -10,6 +9,11 @@ from strawberry.tools import create_type
 DATASET_NAME = 'trec'
 
 ds_builder = load_dataset_builder(DATASET_NAME)
+
+s_fields = []
+
+for feature in ds_builder.info.features.keys():
+    f = strawberry.field(name=feature, resolver=get_name)
 
 @strawberry.field
 def hello(info) -> str:
