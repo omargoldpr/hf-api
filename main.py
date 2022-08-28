@@ -10,7 +10,7 @@ from datasets import (
     get_dataset_split_names,
     load_dataset,
     load_dataset_builder,
-    features
+    features,
 )
 from re import search, IGNORECASE
 
@@ -25,14 +25,10 @@ dataset = load_dataset(DATASET_NAME, split="train")
 
 names = {}
 
-for k,v in ds_builder.info.features.items():
+for k, v in ds_builder.info.features.items():
     if type(v) == features.ClassLabel:
         names[k] = v.names
-    
-# names = {
-#     "label-coarse": ds_builder.info.features["label-coarse"].names,
-#     "label-fine": ds_builder.info.features["label-fine"].names,
-# }
+
 
 query = QueryType()
 
