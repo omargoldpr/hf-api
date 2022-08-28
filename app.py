@@ -10,6 +10,7 @@ from datasets import (
     get_dataset_split_names,
     load_dataset,
     load_dataset_builder,
+    features
 )
 from re import search, IGNORECASE
 
@@ -22,10 +23,16 @@ ds_builder = load_dataset_builder(DATASET_NAME)
 
 dataset = load_dataset(DATASET_NAME, split="train")
 
-names = {
-    "label-coarse": ds_builder.info.features["label-coarse"].names,
-    "label-fine": ds_builder.info.features["label-fine"].names,
-}
+names = {}
+
+for k,v in ds_builder.info.features.items():
+    if type(v) == features.ClassLabel:
+        names[k] = v.names
+    
+# names = {
+#     "label-coarse": ds_builder.info.features["label-coarse"].names,
+#     "label-fine": ds_builder.info.features["label-fine"].names,
+# }
 
 query = QueryType()
 
@@ -42,7 +49,7 @@ def resolve_trecs(*_, text=None, skip=None, first=None):
     ]
 
     if text:
-        output = list(filter(lambda t: search(text, t["text"], IGNORECASE), output))
+        output = filter(lambda t: search(text, t["text"], IGNORECASE), output)
 
     if skip:
         output = output[skip:]
