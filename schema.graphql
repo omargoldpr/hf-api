@@ -15,7 +15,7 @@ List of all records in Trec dataset
 
 
 type Question {
-  # Text of the question.
+  " Text of the question."
   text: String!
   labelCourse: Int!
   labelCourseName: String!
