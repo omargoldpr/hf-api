@@ -11,7 +11,7 @@ from datasets import (
     load_dataset,
     load_dataset_builder,
 )
-from re import search
+from re import search, IGNORECASE
 
 
 type_defs = load_schema_from_path("schema.graphql")
@@ -42,7 +42,7 @@ def resolve_trecs(*_, text=None, skip=None, first=None):
     ]
 
     if text:
-        output = filter(lambda q: search(text, q["text"]), output)
+        output = list(filter(lambda t: search(text, t["text"], IGNORECASE), output))
 
     if skip:
         output = output[skip:]
