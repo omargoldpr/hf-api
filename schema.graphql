@@ -1,10 +1,6 @@
-"""
-Trec datset description
-"""
-
 type Query {
 """
-List of all records in Trec dataset
+**List of all records in [Trec](https://huggingface.co/datasets/trec) dataset**
 """
   questions(
     text: String,
@@ -15,11 +11,16 @@ List of all records in Trec dataset
 
 
 type Question {
-  " Text of the question."
+  "Text of the question."
   text: String!
+  "Coarse class label value."
   labelCourse: Int!
+  "Coarse class label name."
   labelCourseName: String!
+  "Fine class label value."
   labelFine: Int!
+  "Fine class label name."
   labelFineName: String!
+  "Label Name"
   label: String!
 }
