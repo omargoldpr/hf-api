@@ -1,48 +1,76 @@
-from ariadne import ObjectType, QueryType, gql, make_executable_schema, load_schema_from_path
+from ariadne import (
+    ObjectType,
+    QueryType,
+    make_executable_schema,
+    load_schema_from_path,
+)
 from ariadne.asgi import GraphQL
-from datasets import get_dataset_config_names, get_dataset_split_names, load_dataset, load_dataset_builder
+from datasets import (
+    get_dataset_config_names,
+    get_dataset_split_names,
+    load_dataset,
+    load_dataset_builder,
+)
+from re import search
 
-# Define types using Schema Definition Language (https://graphql.org/learn/schema/)
-# Wrapping string in gql function provides validation and better error traceback
-# type_defs = gql("""
-# type Query {
-#   trecs: [Trec]!
-# }
-
-# type Trec {
-#     text: String
-#     : Int
-#     labelFine: Int
-# }
-# """)
 
 type_defs = load_schema_from_path("schema.graphql")
 
-DATASET_NAME = 'trec'
+DATASET_NAME = "trec"
+
+ds_builder = load_dataset_builder(DATASET_NAME)
 
 dataset = load_dataset(DATASET_NAME, split="train")
 
-# Map resolver functions to Query fields using QueryType
+names = {
+    "label-coarse": ds_builder.info.features["label-coarse"].names,
+    "label-fine": ds_builder.info.features["label-fine"].names,
+}
+
 query = QueryType()
 
-# Resolvers are simple python functions
-@query.field("trecs")
-def resolve_trecs(*_):
-    return [
-        {"text": t["text"], "labelCourse": t["label-coarse"], "labelFine": t["label-fine"]}
-        for t in dataset
-    ] 
+
+@query.field("questions")
+def resolve_trecs(*_, text=None, skip=None, first=None):
+    output = [
+        {
+            "text": q["text"],
+            "labelCourse": q["label-coarse"],
+            "labelFine": q["label-fine"],
+        }
+        for q in dataset
+    ]
+
+    if text:
+        output = filter(lambda q: search(text, q["text"]), output)
+
+    if skip:
+        output = output[skip:]
+
+    if first:
+        output = output[:first]
+
+    return output
 
 
-# Map resolver functions to custom type fields using ObjectType
-trec = ObjectType("Trec")
+question = ObjectType("Question")
 
-# @person.field("fullName")
-# def resolve_person_fullname(person, *_):
-#     return "%s %s" % (person["firstName"], person["lastName"])
 
-# Create executable GraphQL schema
-schema = make_executable_schema(type_defs, query, trec)
+@question.field("labelCourseName")
+def resolve_label_course_name(question, *_):
+    return names["label-coarse"][question["labelCourse"]]
 
-# Create an ASGI app using the schema, running in debug mode
+
+@question.field("labelFineName")
+def resolve_label_fine_name(question, *_):
+    return names["label-fine"][question["labelFine"]]
+
+
+@question.field("label")
+def resolve_label(question, *_):
+    return f"{names['label-coarse'][question['labelCourse']]}:{names['label-fine'][question['labelFine']]}"
+
+
+schema = make_executable_schema(type_defs, query, question)
+
 app = GraphQL(schema, debug=True)

@@ -1,9 +1,25 @@
+"""
+Trec datset description
+"""
+
 type Query {
-  trecs: [Trec]!
+"""
+List of all records in Trec dataset
+"""
+  questions(
+    text: String,
+    skip: Int,
+    first: Int
+    ): [Question]!
 }
 
-type Trec {
-    text: String!
-    labelCourse: Int!
-    labelFine: Int!
+
+type Question {
+  # Text of the question.
+  text: String!
+  labelCourse: Int!
+  labelCourseName: String!
+  labelFine: Int!
+  labelFineName: String!
+  label: String!
 }
