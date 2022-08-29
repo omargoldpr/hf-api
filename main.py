@@ -21,7 +21,7 @@ DATASET_NAME = "trec"
 
 ds_builder = load_dataset_builder(DATASET_NAME)
 
-dataset = load_dataset(DATASET_NAME, split="train")
+dataset = load_dataset(DATASET_NAME)
 
 names = {}
 
@@ -34,15 +34,35 @@ query = QueryType()
 
 
 @query.field("questions")
-def resolve_trecs(*_, text=None, skip=None, first=None):
-    output = [
-        {
-            "text": q["text"],
-            "labelCourse": q["label-coarse"],
-            "labelFine": q["label-fine"],
-        }
-        for q in dataset
-    ]
+def resolve_trecs(*_, split=None, text=None, skip=None, first=None):
+    splits = []
+    if split:
+        splits = [split]
+    else:
+        splits = list(dataset.keys())
+    
+    output = []
+    for s in splits:
+        output = [
+                {
+                    "split": s,
+                    "text": q["text"],
+                    "labelCourse": q["label-coarse"],
+                    "labelFine": q["label-fine"],
+                }
+                for q in dataset[s]
+            ]
+    else:
+        for s in dataset:
+            output += [
+                {
+                    "split": s,
+                    "text": q["text"],
+                    "labelCourse": q["label-coarse"],
+                    "labelFine": q["label-fine"],
+                }
+                for q in dataset[s]
+            ]
 
     if text:
         output = filter(lambda t: search(text, t["text"], IGNORECASE), output)

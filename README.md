@@ -15,6 +15,7 @@ The available queries are (for query example go the the [example](#example) sect
 - questions
   - Return a list of all questions in trec dataset
   - Arguments:
+    - split: Select only one split (test or train).
     - text: Search for text content (case-insensitive).
     - skip: Skip x number of rows
     - first: Only return the first x number of rows (apply after skip).
@@ -23,6 +24,7 @@ The available queries are (for query example go the the [example](#example) sect
 
 |       Field     |        Description       |  Type  |
 | --------------- | ------------------------ | ------ |
+| split           | Split (test or train)    | String |
 | text            | Text of the question     | String |
 | label           | Label Name (COURSE:fine) | String |
 | labelCourse     | Coarse class label value | Int    |
@@ -53,6 +55,17 @@ curl https://hf-api.omargoldpr.com/ \
 ```
 {
   questions {
+    split
+    text
+    label
+  }
+}
+```
+
+- Return all questions texts and labels from the test split:
+```
+{
+  questions(split: "test") {
     text
     label
   }
@@ -63,6 +76,7 @@ curl https://hf-api.omargoldpr.com/ \
 ```
 {
   questions(first: 10) {
+    split
     text
     labelCourse
     labelCourseName
@@ -77,6 +91,7 @@ curl https://hf-api.omargoldpr.com/ \
 ```
 {
   questions(text: "popeye") {
+    split
     text
     labelCourse
     labelCourseName
