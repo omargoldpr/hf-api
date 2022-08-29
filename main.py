@@ -41,7 +41,7 @@ def resolve_trecs(*_, split=None, text=None, skip=None, first=None):
 
     output = []
     for s in splits:
-        output = [
+        output += [
             {
                 "split": s,
                 "text": q["text"],
