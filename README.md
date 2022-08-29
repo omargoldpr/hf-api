@@ -8,10 +8,10 @@ This is an API to query a the trec dataset (https://huggingface.co/datasets/)
 
 
 ## Description
-This API allows query data from the trec dataset using [GraphQL](https://graphql.org/learn/).
+This API allows query data from the ***trec*** dataset using [GraphQL](https://graphql.org/learn/).
 
 ### Queries
-The available queries are (for query example go the the [example](#example) section):
+The available queries are (for query example go the [example](#example) section):
 - questions
   - Return a list of all questions in trec dataset
   - Arguments:
@@ -34,11 +34,12 @@ The available queries are (for query example go the the [example](#example) sect
 
 
 ## Usage
-### Graphql Explorer
+### GraphQL Explorer
 - Go to [https://hf-api.omargoldpr.com/](https://hf-api.omargoldpr.com/) and type your first query!
-...
+
 ### Notebook
-- Go to `example.ipynb` to see how get the data from a Jupyter Notebook.\
+- Go to `example.ipynb` to see how get the data from a Jupyter Notebook.
+
 ### CLI
 GraphQL operates over HTTP, so the CLI can be a standard HTTP client, like ```curl``` to access the data.
 Here is an example:
