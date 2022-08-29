@@ -52,7 +52,7 @@ def resolve_trecs(*_, split=None, text=None, skip=None, first=None):
         ]
 
     if text:
-        output = filter(lambda t: search(text, t["text"], IGNORECASE), output)
+        output = list(filter(lambda t: search(text, t["text"], IGNORECASE), output))
 
     if skip:
         output = output[skip:]
