@@ -52,17 +52,6 @@ def resolve_trecs(*_, split=None, text=None, skip=None, first=None):
                 }
                 for q in dataset[s]
             ]
-    else:
-        for s in dataset:
-            output += [
-                {
-                    "split": s,
-                    "text": q["text"],
-                    "labelCourse": q["label-coarse"],
-                    "labelFine": q["label-fine"],
-                }
-                for q in dataset[s]
-            ]
 
     if text:
         output = filter(lambda t: search(text, t["text"], IGNORECASE), output)
