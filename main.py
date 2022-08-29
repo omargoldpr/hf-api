@@ -38,18 +38,18 @@ def resolve_trecs(*_, split=None, text=None, skip=None, first=None):
     splits = get_dataset_split_names(DATASET_NAME)
     if split:
         splits = [split]
-    
+
     output = []
     for s in splits:
         output = [
-                {
-                    "split": s,
-                    "text": q["text"],
-                    "labelCourse": q["label-coarse"],
-                    "labelFine": q["label-fine"],
-                }
-                for q in dataset[s]
-            ]
+            {
+                "split": s,
+                "text": q["text"],
+                "labelCourse": q["label-coarse"],
+                "labelFine": q["label-fine"],
+            }
+            for q in dataset[s]
+        ]
 
     if text:
         output = filter(lambda t: search(text, t["text"], IGNORECASE), output)
