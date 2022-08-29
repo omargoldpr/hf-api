@@ -35,11 +35,9 @@ query = QueryType()
 
 @query.field("questions")
 def resolve_trecs(*_, split=None, text=None, skip=None, first=None):
-    splits = []
+    splits = get_dataset_split_names(DATASET_NAME)
     if split:
         splits = [split]
-    else:
-        splits = list(dataset.keys())
     
     output = []
     for s in splits:
